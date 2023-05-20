@@ -2,12 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
-input, textarea {
+img{
+    max-height: 100%;
+}
+
+input, textarea, select {
     @apply border border-blue-900 rounded-md px-1 w-full;
     @apply mb-2;
 }
 
-input:focus, textarea:focus{
+input:focus, textarea:focus, select:focus{
      @apply border-blue-900;
 }
 

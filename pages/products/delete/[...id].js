@@ -15,14 +15,20 @@ const DeleteProductPage = () => {
             setProductInfo(response.data);
         })
     },[id])
-    const  goBack=()=>{
+
+    const goBack=()=>{
         router.push('/products');
+    }
+
+    const deleteProduct = async ()=>{
+        await axios.delete('/api/products?id='+id);
+        goBack();
     }
   return (
     <Layout>
         <h1>Dou you really want to delete product "{productInfo?.title}"?</h1>
         <div className='flex gap-2'>
-        <button className='btn-red'>
+        <button onClick={deleteProduct} className='btn-red'>
             Yes
         </button>
         <button className='btn-default' onClick={goBack}>
