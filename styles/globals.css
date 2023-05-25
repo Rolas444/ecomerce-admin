@@ -27,7 +27,7 @@ label{
     @apply bg-blue-900 text-white px-4 py-1 rounded-md;
 }
 
-table.basic{
+/* table.basic{
     @apply w-full;
 }
 
@@ -42,6 +42,20 @@ table.basic tr td{
 table.basic a{
     @apply bg-blue-900 text-white text-sm p-1 
     rounded-md inline-flex gap-1 mr-1;
+} */
+table.basic{
+    @apply w-full bg-white rounded-sm shadow-md;
+}
+table.basic thead tr td,
+table.basic thead tr th
+{
+    @apply text-sm text-gray-600 uppercase border-b border-gray-200 px-4 py-2;
+}
+table.basic tr td{
+    @apply px-4 py-1;
+}
+table.basic a{
+    @apply px-4 rounded-sm inline-flex mx-1 items-center gap-1 text-sm py-1;
 }
 
 .btn-default, .btn-red{
