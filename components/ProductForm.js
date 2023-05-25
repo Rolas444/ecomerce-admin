@@ -105,8 +105,8 @@ const ProductForm = ({
                         <option key={cat._id} value={cat._id}>{cat.name}</option>
                     ))}
                 </select>
-                {propertiesToFill.length > 0 && propertiesToFill.map(p => (
-                    <div className=''>
+                {propertiesToFill.length > 0 && propertiesToFill.map((p,i) => (
+                    <div key={i} className=''>
                         <label>{p.name}</label>
                         <div>
                             <select
