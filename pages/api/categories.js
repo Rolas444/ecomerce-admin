@@ -27,7 +27,7 @@ const handle = async (req, res) => {
         const categoryDoc = await Category.updateOne({_id},{
             name,
             parent: parentCategory || undefined,
-            properties
+            properties,
         });
         res.json(categoryDoc);
     }
