@@ -4,7 +4,7 @@ import NextAuth, { getServerSession } from 'next-auth'
 // import AppleProvider from 'next-auth/providers/apple'
 // import FacebookProvider from 'next-auth/providers/facebook'
 import GoogleProvider from 'next-auth/providers/google'
-import { Admin } from '@/models/Amin';
+import { Admin } from '@/models/Admin';
 import { mongooseConnect } from '@/lib/mongoose';
 // import EmailProvider from 'next-auth/providers/email'
 const adminEmails = ['7200ws@gmail.com', 'tomasferro29@gmail.com'];
