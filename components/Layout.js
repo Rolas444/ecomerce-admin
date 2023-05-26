@@ -13,11 +13,15 @@ export default function Layout({ children }) {
 
   const [showNav, setShowNav] = useState(false);
   const { data: session } = useSession();
+  const loginGoogle = (e)=>{
+    e.preventDefault();
+    signIn('google')
+  }
   if (!session) {
     return (
       <div className="bg-ngGray w-screen h-screen flex items-center">
         <div className='text-center w-full'>
-          <button onClick={() => signIn('google')} className='bg-white p-2 px-4 rounded-lg'>Login with Google</button>
+          <button onClick={loginGoogle} className='bg-white p-2 px-4 rounded-lg'>Login with Google</button>
         </div>
       </div>
     )
