@@ -7,7 +7,7 @@ import GoogleProvider from 'next-auth/providers/google'
 import { Admin } from '@/models/Admin';
 import { mongooseConnect } from '@/lib/mongoose';
 // import EmailProvider from 'next-auth/providers/email'
-const adminEmails = ['7200ws@gmail.com', 'tomasferro29@gmail.com'];
+// const adminEmails = ['7200ws@gmail.com', 'tomasferro29@gmail.com'];
 
 async function isAdminEmail(email){
   mongooseConnect()
