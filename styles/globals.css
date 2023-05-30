@@ -19,6 +19,10 @@ h1{
     @apply text-blue-900 mb-2 text-xl;
 }
 
+h2{
+    @apply text-gray-800 mt-6 mb-2 text-lg;
+}
+
 label{
     @apply text-blue-900;
 }
