@@ -1,4 +1,5 @@
 import Layout from "@/components/Layout"
+import Spinner from "@/components/Spinner";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { withSwal } from "react-sweetalert2";
@@ -9,17 +10,18 @@ export const Categories = ({ swal }) => {
     const [parentCategory, setParentCategory] = useState('');
     const [categories, setCategories] = useState([]);
     const [properties, setProperties] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
 
     const saveCategory = async (ev) => {
         ev.preventDefault();
-        const data = { 
-            name, 
-            parentCategory, 
-            properties: properties.map(p=>({
+        const data = {
+            name,
+            parentCategory,
+            properties: properties.map(p => ({
                 name: p.name,
-                values:p.values.split(',')
-            }))
-         }
+                values: p.values.split(',')
+            })),
+        };
         if (editedCategory) {
             data._id = editedCategory._id;
             await axios.put('/api/categories', data);
@@ -34,20 +36,22 @@ export const Categories = ({ swal }) => {
     }
 
     const fetchCategories = () => {
+        setIsLoading(true);
         axios.get('/api/categories').then(result => {
             setCategories(result.data);
+            setIsLoading(false);
         });
     }
     const editCategory = (category) => {
         setEditedCategory(category);
         setName(category.name);
+        setParentCategory(category.parent?._id);
         setProperties(
-            category.properties.map(({name, values})=>({
+            category.properties.map(({ name, values }) => ({
                 name,
                 values: values.join(',')
             }))
         );
-        setParentCategory(category.parent?._id);
     };
 
     const deleteCategory = (category) => {
@@ -112,17 +116,19 @@ export const Categories = ({ swal }) => {
     return (
         <Layout>
             <div>Categories</div>
-            <label>{editedCategory ? `Edit category ${editedCategory.name}` : 'New Category name'}</label>
+            <label>{editedCategory ? `Edit category ${editedCategory.name}`
+                : 'New Category name'}</label>
             <form onSubmit={saveCategory} >
                 <div className="flex gap-1">
-                    <input type="text"
+                    <input
+                        type="text"
                         value={name}
                         onChange={e => setName(e.target.value)}
                         className="mb-0"
                         placeholder="category name" />
                     <select className="mb-0"
                         onChange={ev => setParentCategory(ev.target.value)}
-                        value={parentCategory?._id}>
+                        value={parentCategory}>
                         <option value="">No parent category</option>
                         {categories.length > 0 && categories.map(category => (
                             <option key={category._id} value={category._id} >
@@ -145,7 +151,7 @@ export const Categories = ({ swal }) => {
                                 className="mb-0"
                                 value={property.name}
                                 onChange={ev => handlePropertyNameChange(index, property, ev.target.value)}
-                                placeholder="proerty name (example: color)" />
+                                placeholder="property name (example: color)" />
                             <input type="text"
                                 className="mb-0"
                                 value={property.values}
@@ -154,17 +160,17 @@ export const Categories = ({ swal }) => {
                             <button
                                 type="button"
                                 onClick={() => removeProperty(index)}
-                                className="btn-default">
+                                className="btn-red">
                                 Remove
                             </button>
                         </div>
                     ))}
                 </div>
-                
+
                 <div className="flex gap-1">
-                {editedCategory && (
-                        <button 
-                            onClick={()=>{
+                    {editedCategory && (
+                        <button
+                            onClick={() => {
                                 setEditedCategory(null);
                                 setName('');
                                 setParentCategory('');
@@ -173,11 +179,11 @@ export const Categories = ({ swal }) => {
                             className="btn-default" >
                             Cancel
                         </button>
-                        )}
-                        <button type="submit" className="btn-primary py-1">Save</button>
+                    )}
+                    <button type="submit" className="btn-primary py-1">Save</button>
                 </div>
-                
-                
+
+
 
             </form>
             {!editedCategory && (
@@ -190,6 +196,15 @@ export const Categories = ({ swal }) => {
                         </tr>
                     </thead>
                     <tbody>
+                        {isLoading && (
+                            <tr>
+                                <td colSpan={3}>
+                                    <div className="py-4">
+                                        <Spinner fullWidth={true} />
+                                    </div>
+                                </td>
+                            </tr>
+                        )}
                         {categories.length > 0 && categories.map(category => (
                             <tr key={category._id}>
                                 <td>{category.name}</td>

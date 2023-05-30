@@ -1,7 +1,7 @@
 
 import { useSession, signIn, signOut } from "next-auth/react"
-import { Inter } from '@next/font/google'
-import styles from '@/styles/Home.module.css'
+// import { Inter } from '@next/font/google'
+// import styles from '@/styles/Home.module.css'
 
 import Nav from '@/components/Nav'
 import { useState } from "react"

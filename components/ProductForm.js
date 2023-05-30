@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
-import Spinner from './Spinner';
+import Spinner from '@/components/Spinner';
 import { ReactSortable } from 'react-sortablejs';
 // import ProductsForm from '@/components/ProductForm';
 
@@ -12,21 +12,25 @@ const ProductForm = ({
     price: existingPrice,
     images: existingImages,
     category: assignedCategory,
+    properties: assignedProperties,
 }) => {
     const [title, setTitle] = useState(existingTitle || "");
     const [description, setDescription] = useState(existingDescription || "");
     const [category, setCategory] = useState(assignedCategory || "");
-    const [productProperties, setProductProperties] = useState({});
+    const [productProperties, setProductProperties] = useState(assignedProperties || {});
     const [price, setPrice] = useState(existingPrice || "");
     const [images, setImages] = useState(existingImages || []);
     const [goToProducts, setGoToProducts] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
     const [categories, setCategories] = useState([]);
+    const [categoriesLoading, setCategoriesLoading] = useState(false);
     const router = useRouter();
 
     useEffect(() => {
+        setCategoriesLoading(true);
         axios.get('/api/categories').then(result => {
             setCategories(result.data)
+            setCategoriesLoading(false);
         })
     }, [])
 
@@ -105,9 +109,14 @@ const ProductForm = ({
                         <option key={cat._id} value={cat._id}>{cat.name}</option>
                     ))}
                 </select>
+                {
+                    categoriesLoading && (
+                        <Spinner />
+                    )
+                }
                 {propertiesToFill.length > 0 && propertiesToFill.map((p,i) => (
                     <div key={i} className=''>
-                        <label>{p.name}</label>
+                        <label>{p.name[0].toUpperCase()+p.name.substring(1)}</label>
                         <div>
                             <select
                                 value={productProperties[p.name]}
