@@ -43,8 +43,8 @@ export async function isAdminRequest(req, res){
   const session =await  getServerSession(req, res, authOptions);
   
   if(!( await isAdminEmail(session?.user?.email))){
-    res.status(401).json({message: 'Access denied'});
-    // res.end();
-    // throw "not an admin";
+    res.status(401)//.json({message: 'Access denied'});
+    res.end();
+    throw "not an admin";
   }
 }
