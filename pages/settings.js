@@ -1,71 +1,79 @@
-import Layout from '@/components/Layout'
-import Spinner from '@/components/Spinner';
-import axios from 'axios'
-import { useEffect, useState } from 'react'
-import { withSwal } from 'react-sweetalert2';
+import Layout from "@/components/Layout";
+import {useEffect, useState} from "react";
+import axios from "axios";
+import Spinner from "@/components/Spinner";
+import {withSwal} from "react-sweetalert2";
 
-const SettingsPage = ({swal}) => {
-    const [products, setProducts] = useState([]);
-    const [featuredProductId, setFeaturedProductId] = useState('');
-    const [productsLoading, setProductsIsLoading] = useState(false);
-    const [featuredLoading, setFeaturedLoading] = useState(false);
-    useEffect(() => {
-        setProductsIsLoading(true);
-        axios.get('/api/products').then((response) => {
-            setProducts(response.data);
-            setProductsIsLoading(false);
-        });
-        setFeaturedLoading(true);
-        axios.get('/api/settings?name=featuredProductId').then((response) => {
-            setFeaturedProductId(response.data?.value);
-            setFeaturedLoading(false);
-        });
-    }, [])
+function SettingsPage({swal}) {
+  const [products, setProducts] = useState([]);
+  const [featuredProductId, setFeaturedProductId] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [shippingFee, setShippingFee] = useState('');
 
-    const saveSettings = (ev) => {
-        ev.preventDefault();
-        axios.put('/api/settings',{
-            name: 'featuredProductId',
-            value: featuredProductId
-        }).then((res) => {
-            swal.fire({
-                title:'Settings saved',
-                icon: 'success',
-            })
-        })
-    }
+  useEffect(() => {
+    setIsLoading(true);
+    fetchAll().then(() => {
+      setIsLoading(false);
+    });
+  }, []);
 
-    return (
-        <Layout>
-            <h1>Store Settings</h1>
+  async function fetchAll() {
+    await axios.get('/api/products').then(res => {
+      setProducts(res.data);
+    });
+    await axios.get('/api/settings?name=featuredProductId').then(res => {
+      setFeaturedProductId(res.data.value);
+    });
+    await axios.get('/api/settings?name=shippingFee').then(res => {
+      setShippingFee(res.data?.value);
+    });
+  }
 
-            <form onSubmit={saveSettings}>
-                {(productsLoading || featuredLoading) && (<Spinner />)}
-                {(!productsLoading || !featuredLoading) && (
-                    <>
-                        <label>Featured product</label>
-                        <select 
-                        value={featuredProductId}
-                        onChange={ev=>setFeaturedProductId(ev.target.value)} name='' id=''>
-                            {products.length >0 && products.map((product) =>(
-                                <option key={product._id} value={product._id}>
-                                    {product.title}
-                                </option>
-                            ))}
-                        </select>
-                        <div>
-                            <button type='submit' className='btn-primary'>
-                                Save settings
-                            </button>
-                        </div>
-                    </>
-                )}
+  async function saveSettings() {
+    setIsLoading(true);
+    await axios.put('/api/settings', {
+      name: 'featuredProductId',
+      value: featuredProductId,
+    });
+    await axios.put('/api/settings', {
+      name: 'shippingFee',
+      value: shippingFee,
+    });
+    setIsLoading(false);
+    await swal.fire({
+      title: 'Settings saved!',
+      icon: 'success',
+    });
+  }
 
-            </form>
-        </Layout>
-    )
+  return (
+    <Layout>
+      <h1>Settings</h1>
+      {isLoading && (
+        <Spinner />
+      )}
+      {!isLoading && (
+        <>
+          <label>Featured product</label>
+          <select value={featuredProductId} onChange={ev => setFeaturedProductId(ev.target.value)}>
+            {products.length > 0 && products.map(product => (
+              <option value={product._id}>{product.title}</option>
+            ))}
+          </select>
+          <label>Shipping price (in usd)</label>
+          <input type="number"
+                 value={shippingFee}
+                 onChange={ev => setShippingFee(ev.target.value)}
+          />
+          <div>
+            <button onClick={saveSettings} className="btn-primary">Save settings</button>
+          </div>
+        </>
+      )}
+    </Layout>
+  );
 }
 
-export default withSwal(({swal})=>(
-    <SettingsPage swal={swal}/>
+export default withSwal(({swal}) => (
+  <SettingsPage swal={swal} />
 ));
