@@ -6,7 +6,8 @@ const ProductSchema = new Schema({
     price: {type: Number, required: true},
     images: [{type: String}],
     category: {type: mongoose.Types.ObjectId, ref:'Category'},
-    properties: {type: Object}
+    properties: {type: Object},
+    stock:{type: Number}
 },{
     timestamps: true,
 });

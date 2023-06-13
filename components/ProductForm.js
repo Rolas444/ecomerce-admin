@@ -13,12 +13,14 @@ const ProductForm = ({
     images: existingImages,
     category: assignedCategory,
     properties: assignedProperties,
+    stock: existingStock,
 }) => {
     const [title, setTitle] = useState(existingTitle || "");
     const [description, setDescription] = useState(existingDescription || "");
     const [category, setCategory] = useState(assignedCategory || "");
     const [productProperties, setProductProperties] = useState(assignedProperties || {});
     const [price, setPrice] = useState(existingPrice || "");
+    const [stock, setStock] = useState(existingStock || 0);
     const [images, setImages] = useState(existingImages || []);
     const [goToProducts, setGoToProducts] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
@@ -38,7 +40,7 @@ const ProductForm = ({
         ev.preventDefault();
         const data = {
             title, description, price, images, category,
-            properties: productProperties
+            properties: productProperties, stock
         };
         if (_id) {
             //update
@@ -171,6 +173,15 @@ const ProductForm = ({
                     placeholder='0.00'
                     value={price}
                     onChange={ev => setPrice(ev.target.value)}
+                />
+                <label>
+                    Stock
+                </label>
+                <input 
+                type='number'
+                placeholder='0'
+                value={stock}
+                onChange={ev=>setStock(ev.target.value)}
                 />
                 <button
                     type='submit'
